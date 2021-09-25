@@ -1,23 +1,23 @@
 ##################################################################################################
 # BSD 3-Clause License
-# 
+#
 # Copyright (c) 2020, Jose R. Garcia
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # 1. Redistributions of source code must retain the above copyright notice, this
 #    list of conditions and the following disclaimer.
-# 
+#
 # 2. Redistributions in binary form must reproduce the above copyright notice,
 #    this list of conditions and the following disclaimer in the documentation
 #    and/or other materials provided with the distribution.
-# 
+#
 # 3. Neither the name of the copyright holder nor the names of its
 #    contributors may be used to endorse or promote products derived from
 #    this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -53,17 +53,17 @@ from wb4_slave_seq import *
 from wb4_slave_if import *
 
 class wb4_slave_monitor(UVMMonitor):
-    """         
+    """
        Class: Wishbone Master Monitor
-        
+
        Definition: Contains functions, tasks and methods of this agent's monitor.
     """
 
     def __init__(self, name, parent=None):
         super().__init__(name, parent)
-        """         
+        """
            Function: new
-          
+
            Definition: Class Constructor.
 
            Args:
@@ -80,23 +80,23 @@ class wb4_slave_monitor(UVMMonitor):
 
     def build_phase(self, phase):
         super().build_phase(phase)
-        """         
+        """
            Function: build_phase
-          
-           Definition: 
+
+           Definition:
 
            Args:
              phase: build_phase
         """
         self.ap = UVMAnalysisPort("ap", self)
 
-    
+
     async def run_phase(self, phase):
-        """         
+        """
            Function: run_phase
-          
+
            Definition: Task executed during run phase. Drives the signals in
-                       response to a DUT read request. 
+                       response to a DUT read request.
 
            Args:
              phase: run_phase
@@ -105,9 +105,9 @@ class wb4_slave_monitor(UVMMonitor):
             tr = None  # Clean transaction for every loop.
             # Create sequence item for this transaction.
             tr = wb4_slave_seq.type_id.create("tr", self)
-            
+
             await RisingEdge(self.vif.clk_i)
-            
+
             if (self.vif.stb_i == 1 and self.vif.stall_o == 0):
                 # Load signals values into sequence item to describe the transaction
                 tr.address     = self.vif.adr_i.value.integer
@@ -116,20 +116,19 @@ class wb4_slave_monitor(UVMMonitor):
                 tr.cycle       = self.vif.cyc_i
                 tr.strobe      = self.vif.stb_i.value.integer
                 tr.address_tag = self.vif.tga_o.value.integer
-                tr.data_tag    = self.vif.tgd_o.value.integer
+                tr.data_tag    = self.vif.tgd_i.value.integer
                 tr.cycle_tag   = self.vif.tgc_o.value.integer
                 
                 if (self.vif.we_i == 0):
                   await RisingEdge(self.vif.ack_o) # wait for read response
+                  tr.data_tag    = self.vif.tgd_o.value.integer
 
                 # Load response values into sequence item to describe the transaction
                 tr.data_in     = self.vif.dat_i.value.integer
                 tr.stall       = self.vif.stall_o.value.integer
-                tr.data_tag    = self.vif.tgd_o.value.integer
                 tr.acknowledge = self.vif.ack_o.value.integer
 
                 self.num_items += 1       # Increment transactions count
-
                 self.ap.write(tr) # Send transaction through analysis port
                 uvm_info(self.tag, tr.convert2string(), UVM_FULL)
 
