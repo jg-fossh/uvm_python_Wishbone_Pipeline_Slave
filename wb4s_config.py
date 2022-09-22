@@ -1,7 +1,7 @@
 ##################################################################################################
 # BSD 3-Clause License
 # 
-# Copyright (c) 2020, Jose R. Garcia
+# Copyright (c) 2022, Jose R. Garcia
 # All rights reserved.
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -30,22 +30,20 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 ##################################################################################################
-# File name     : wb4_slave_config.py
-# Author        : Jose R Garcia
-# Created       : 2020/11/22 10:13:34
-# Last modified : 2021/06/12 15:08:41
-# Project Name  : UVM-Python Verification Library
-# Module Name   : wb4_slave_config
-# Description   : Wishbone Bus Master Agent configuration object.
+# File name    : wb4s_config.py
+# Author       : Jose R Garcia (jg-fossh@protonmail.com)
+# Project Name : UVM-Python Verification Library
+# Class Name   : wb4s_config
+# Description  : Wishbone Bus Master Agent configuration object.
 #
 # Additional Comments:
 #
 ##################################################################################################
 from uvm.base.uvm_object import *
 from uvm.macros import *
-from wb4_slave_if import *
+from wb4s_if import *
 
-class wb4_slave_config(UVMObject):
+class wb4s_config(UVMObject):
     """         
        Class: Wishbone Master Agent Config
         
@@ -53,7 +51,7 @@ class wb4_slave_config(UVMObject):
     """
 
     
-    def __init__(self, name="wb4_slave_config"):
+    def __init__(self, name="wb4s_config"):
         super().__init__(name)
         """         
            Function: new
@@ -64,7 +62,7 @@ class wb4_slave_config(UVMObject):
              name: This agents name.
              parent: NONE
         """
-        self.vif              = None # wb4_slave_if
+        self.vif              = None # wb4s_if
         self.has_driver       = None
         self.has_monitor      = None
 
@@ -78,7 +76,7 @@ class wb4_slave_config(UVMObject):
            Args:
              phase: build_phase
         """
-        self.vif = wb4_slave_if.type_id.create("vif", self)
+        self.vif = wb4s_if.type_id.create("vif", self)
 
 
-uvm_object_utils(wb4_slave_config)
+uvm_object_utils(wb4s_config)

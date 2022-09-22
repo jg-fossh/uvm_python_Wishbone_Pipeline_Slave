@@ -1,7 +1,7 @@
 ##################################################################################################
 # BSD 3-Clause License
 # 
-# Copyright (c) 2020, Jose R. Garcia
+# Copyright (c) 2022, Jose R. Garcia
 # All rights reserved.
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -30,13 +30,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 ##################################################################################################
-# File name     : wb4_slave_driver.py
-# Author        : Jose R Garcia
-# Created       : 2020/11/22 12:45:43
-# Last modified : 2021/06/21 20:13:23
-# Project Name  : UVM-Python Verification Library
-# Module Name   : wb4_slave_driver
-# Description   : Wishbone Bus Interface Driver.
+# File name    : wb4s_driver.py
+# Author       : Jose R Garcia (jg-fossh@protonmail.com)
+# Project Name : UVM-Python Verification Library
+# Class Name   : wb4s_driver
+# Description  : Wishbone Bus Interface Driver.
 #
 # Additional Comments:
 #   This driver drives the signals to respond to a WB Master.
@@ -49,10 +47,10 @@ from uvm.base import *
 from uvm.comps import UVMDriver
 from uvm.macros import uvm_component_utils, uvm_info
 
-from wb4_slave_seq import *
-from wb4_slave_if import *
+from wb4s_seq import *
+from wb4s_if import *
 
-class wb4_slave_driver(UVMDriver):
+class wb4s_driver(UVMDriver):
     """         
        Class: Wishbone Pipeline Bus Interface Driver
         
@@ -72,9 +70,9 @@ class wb4_slave_driver(UVMDriver):
              parent: NONE
         """
         self.seq_item_port
-        self.vif  = wb4_slave_if
+        self.vif  = wb4s_if
         self.trig = Event("trans_exec")  # event
-        self.tag  = "wb4_slave_driver_" + name
+        self.tag  = "wb4s_driver_" + name
         self.data = 0
         self.cfg  = None
 
@@ -130,6 +128,7 @@ class wb4_slave_driver(UVMDriver):
         self.vif.we_i  <= tr.we
         self.vif.sel_i <= tr.select
         self.vif.tgd_i <= tr.data_tag
+        self.vif.tgc_i <= tr.cycle_tag
         
         if (self.vif.stall_o == 1):
             await FallingEdge(self.vif.stall_o)
@@ -143,10 +142,8 @@ class wb4_slave_driver(UVMDriver):
         tr = tr[0]
         await self.feed_data(tr)
         self.seq_item_port.item_done()
-        phase.drop_objection(self, "wb4_slave_driver drop objection")
-
+        phase.drop_objection(self, "wb4s_driver drop objection")
         self.trig.set()
-        # self.vif.stb_i <= 0
 
 
     async def reset_signals(self):
@@ -161,4 +158,4 @@ class wb4_slave_driver(UVMDriver):
         tr.convert2string
         await Timer(0, "NS")
 
-uvm_component_utils(wb4_slave_driver)
+uvm_component_utils(wb4s_driver)

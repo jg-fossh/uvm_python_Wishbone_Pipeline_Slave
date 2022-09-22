@@ -1,7 +1,7 @@
 ##################################################################################################
 # BSD 3-Clause License
 # 
-# Copyright (c) 2020, Jose R. Garcia
+# Copyright (c) 2022, Jose R. Garcia
 # All rights reserved.
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -30,24 +30,22 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 ##################################################################################################
-# File name     : wb4_slave_agent.py
-# Author        : Jose R Garcia
-# Created       : 2020/11/09 21:43:54
-# Last modified : 2021/06/12 15:08:29
-# Project Name  : UVM-Python Verification Library
-# Module Name   : wb4_slave_agent
-# Description   : Wishbone Bus Master Verification Component Agent.
+# File name    : wb4s_agent.py
+# Author       : Jose R Garcia (jg-fossh@protonmail.com)
+# Project Name : UVM-Python Verification Library
+# Class Name   : wb4s_agent
+# Description  : Wishbone Bus Master Verification Component Agent.
 #
 # Additional Comments:
 #   The agent's components instantiations and connections.
 ##################################################################################################
 from uvm import *
-from wb4_slave_if import *
-from wb4_slave_driver import *
-from wb4_slave_sequencer import *
-from wb4_slave_monitor import *
+from wb4s_if import *
+from wb4s_driver import *
+from wb4s_sequencer import *
+from wb4s_monitor import *
 
-class wb4_slave_agent(UVMAgent):
+class wb4s_agent(UVMAgent):
     """         
        Class: Wishbone Bus Verification Component Agent
         
@@ -84,16 +82,16 @@ class wb4_slave_agent(UVMAgent):
         """
         #  arr = []
         #  if (not UVMConfigDb.get(self, "*", "cfg", arr)):
-        #      uvm_fatal("wb4_slave_agent", "No config")
+        #      uvm_fatal("wb4s_agent", "No config")
         #  self.cfg = arr[0]
         
         if (self.cfg.has_driver == 1):
-            self.drv = wb4_slave_driver.type_id.create("drv", self)
-            # self.sqr = wb4_slave_agent_sequencer.type_id.create("sqr", self)
+            self.drv = wb4s_driver.type_id.create("drv", self)
+            # self.sqr = wb4s_agent_sequencer.type_id.create("sqr", self)
             self.sqr = UVMSequencer.type_id.create("sqr", self)
        
         if (self.cfg.has_monitor == 1):
-            self.mon = wb4_slave_monitor.type_id.create("mon", self)
+            self.mon = wb4s_monitor.type_id.create("mon", self)
 
 
     def connect_phase(self, phase):
@@ -114,4 +112,4 @@ class wb4_slave_agent(UVMAgent):
             self.drv.vif = self.cfg.vif
 
 
-uvm_component_utils(wb4_slave_agent)
+uvm_component_utils(wb4s_agent)

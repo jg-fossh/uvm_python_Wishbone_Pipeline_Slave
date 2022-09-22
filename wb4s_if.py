@@ -1,7 +1,7 @@
 ##################################################################################################
 # BSD 3-Clause License
 # 
-# Copyright (c) 2020, Jose R. Garcia
+# Copyright (c) 2022, Jose R. Garcia
 # All rights reserved.
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -30,38 +30,56 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 ##################################################################################################
-# File name     : wb4_slave_sequencer.py
-# Author        : Jose R Garcia
-# Created       : 2020/11/05 20:11:12
-# Last modified : 2021/06/12 15:09:31
+# File name     : wb4s_if.py
+# Author        : Jose R Garcia (jg-fossh@protonmail.com)
 # Project Name  : UVM-Python Verification Library
-# Module Name   : wb4_slave_sequencer
-# Description   : Wishbone Master Sequencer.
+# Module Name   : wb4s_if
+# Description   : Wishbone master virtual interface
 #
 # Additional Comments:
-#
+#    Used to connect the agent and the UUT's bus.
 ##################################################################################################
-from uvm import *
+import cocotb
+from cocotb.triggers import *
+from uvm.base.sv import sv_if
 
-class wb4_slave_sequencer(UVMSequencer):
+class wb4s_if(sv_if):
     """         
-       Class: Memory Interface Read Slave Sequencer
+       Class: Memory Interface Read Slave Interface
         
-       Definition: Contains functions, tasks and methods of this agent's sequencer.
+       Definition: Contains functions, tasks and methods of this agent's virtual interface.
     """
 
-    def __init__(self, name, parent=None):
-        super().__init__(name, parent)
+
+    def __init__(self, dut, bus_map=None):
         """         
            Function: new
           
-           Definition: Read slave interface sequencer constructor.
+           Definition: Read slave interface constructor.
 
            Args:
-             name: This agents name.
-             parent: NONE
+             dut: The dut it connects to. Passed in by cocotb top.
+             bus_map: Naming of the bus signals.
         """
-        self.seq_item_export = UVMBlockingPeekPort("seq_item_export", self)
+        if bus_map is None:
+            #  If NONE then create the default.
+            bus_map = {"clk_i": "clk_i",
+                       "rst_i": "rst_i",
+                       "cyc_i": "cyc_i",
+                       "stb_i": "stb_i",
+                       "dat_i": "dat_i",
+                       "dat_o": "dat_o",
+                       "adr_i": "adr_i",
+                       "we_i": "we_i",
+                       "sel_i": "sel_i",
+                       "stall_o": "stall_o",
+                       "ack_o": "ack_o",
+                       "tga_i": "tga_i",
+                       "tgd_i": "tgd_i",
+                       "tgd_o": "tgd_o",
+                       "tgc_i": "tgc_i"}
+        super().__init__(dut, "",bus_map)
 
-
-uvm_component_utils(wb4_slave_sequencer)
+    
+    async def start(self):
+        await Timer(0, "MS")
