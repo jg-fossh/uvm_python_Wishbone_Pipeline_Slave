@@ -143,6 +143,7 @@ class wb4s_single_read_seq(wb4s_base_sequence):
         self.data           = 0
         self.address        = 0
         self.cycle          = 0
+        self.cycle_tag      = 0
         self.strobe         = 0
         self.transmit_delay = 0
         self.data_tag       = 0
@@ -156,6 +157,7 @@ class wb4s_single_read_seq(wb4s_base_sequence):
         self.req.data_in        = self.data
         self.req.address        = self.address
         self.req.cycle          = self.cycle
+        self.req.cycle_tag      = self.cycle_tag
         self.req.strobe         = self.strobe
         self.req.data_tag       = self.data_tag
         self.req.acknowledge    = self.acknowledge
@@ -178,6 +180,7 @@ class wb4s_single_write_seq(wb4s_base_sequence):
         self.data           = 0
         self.address        = 0
         self.cycle          = 0
+        self.cycle_tag      = 0
         self.strobe         = 0
         self.transmit_delay = 0
         self.data_tag       = 0
@@ -191,6 +194,7 @@ class wb4s_single_write_seq(wb4s_base_sequence):
         self.req.data_in        = self.data
         self.req.address        = self.address
         self.req.cycle          = self.cycle
+        self.req.cycle_tag      = self.cycle_tag
         self.req.strobe         = self.strobe
         self.req.data_tag       = self.data_tag
         self.req.acknowledge    = self.acknowledge
