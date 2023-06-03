@@ -108,13 +108,15 @@ class wb4s_seq(UVMSequenceItem):
                             \n    CYC_i : %d \
                             \n    STB_i : %d \
                             \n   DATA_i : 0x%h \
+                            \n   ADDR_i : 0x%h \
                             \n    TGC_i : 0x%h \
                             \n    TGD_i : 0x%h \
+                            \n    TGA_i : 0x%h \
                             \n    ACK_i : %d \
                             \n   DATA_o : 0x%h \
                             \n    Delay : %d  clocks \
                             \n =================================== \n ", \
-            self.cycle, self.strobe, self.data_in, self.cycle_tag, self.data_tag, self.acknowledge, self.data_out, self.transmit_delay)
+            self.cycle, self.strobe, self.data_in, self.address, self.cycle_tag, self.data_tag, self.address_tag, self.acknowledge, self.data_out, self.transmit_delay)
 
 
 uvm_object_utils(wb4s_seq)
@@ -147,6 +149,7 @@ class wb4s_single_read_seq(wb4s_base_sequence):
         self.strobe         = 0
         self.transmit_delay = 0
         self.data_tag       = 0
+        self.address_tag    = 0
         self.acknowledge    = 0
         self.we             = 0
 
@@ -160,6 +163,7 @@ class wb4s_single_read_seq(wb4s_base_sequence):
         self.req.cycle_tag      = self.cycle_tag
         self.req.strobe         = self.strobe
         self.req.data_tag       = self.data_tag
+        self.req.address_tag    = self.address_tag   
         self.req.acknowledge    = self.acknowledge
         self.req.transmit_delay = self.transmit_delay
 
@@ -184,6 +188,7 @@ class wb4s_single_write_seq(wb4s_base_sequence):
         self.strobe         = 0
         self.transmit_delay = 0
         self.data_tag       = 0
+        self.address_tag    = 0
         self.acknowledge    = 0
         self.we             = 1
 
@@ -197,6 +202,7 @@ class wb4s_single_write_seq(wb4s_base_sequence):
         self.req.cycle_tag      = self.cycle_tag
         self.req.strobe         = self.strobe
         self.req.data_tag       = self.data_tag
+        self.req.address_tag    = self.address_tag
         self.req.acknowledge    = self.acknowledge
         self.req.transmit_delay = self.transmit_delay
 
